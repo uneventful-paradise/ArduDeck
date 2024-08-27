@@ -80,7 +80,7 @@ int SerialPort::readSerialPort(char* buffer, unsigned int buf_size)
     unsigned int toRead = 0;
 
     ClearCommError(this->handler, &this->errors, &this->status);
-    printf("Current buffer size is %d\n", this->status.cbInQue);
+    //printf("Current buffer size is %d\n", this->status.cbInQue);
     //cbInQue = number of bytes in the port buffer that havent been read yet. now we determine how many bytes we need to read
     if (this->status.cbInQue > 0) {//read the desired amount of bytes
 
@@ -90,13 +90,13 @@ int SerialPort::readSerialPort(char* buffer, unsigned int buf_size)
         else {
             toRead = this->status.cbInQue;
         }
-        printf("toRead is %d\n", toRead);
+        //printf("toRead is %d\n", toRead);
     }
     else {
         printf("ALERT: Negative buffer size\n");
     }
     if (ReadFile(this->handler, buffer, toRead, &bytesRead, NULL)) {
-        printf("Read %ld bytes. Target was %d\n--------------------\n", bytesRead, toRead);
+        //printf("Read %ld bytes. Text is %s--------------------\n", bytesRead, buffer);
         return bytesRead;
     }
     return 0;
@@ -105,14 +105,14 @@ int SerialPort::readSerialPort(char* buffer, unsigned int buf_size)
 bool SerialPort::writeSerialPort(char* buffer, unsigned int buf_size)
 {
     DWORD bytesSend;
-
+    //printf("attempting to send %s to arduino\n", buffer);
     if (!WriteFile(this->handler, (void*)buffer, buf_size, &bytesSend, 0)) {
         ClearCommError(this->handler, &this->errors, &this->status);
         printf("Error when writing message\n");
         return false;
     }
     else {
-        printf("Wrote %d bytes\n----------------\n", bytesSend);
+        //printf("Wrote %d bytes and sent %s----------------\n", bytesSend, buffer);
         return true;
     }
 }

@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS 1
 #include<iostream>
 using namespace std;
 #include<string>
@@ -23,19 +24,23 @@ int main() {
 
 		cout << "Enter your command: " << endl;
 		string data;
-		cin >> data;
+		getline(cin, data);
 
-		char* charArray = new char[data.size() + 1];
+		//append terminator
+		char* charArray = new char[data.length() + 2];
 		copy(data.begin(), data.end(), charArray);
 		charArray[data.size()] = '\n';
+		charArray[data.size()+1] = '\0';
+		//strcpy(charArray, data.c_str());
 
 		arduino.writeSerialPort(charArray, MAX_DATA_LENGTH);
-		Sleep(200);
+		//read response
 		arduino.readSerialPort(output, MAX_DATA_LENGTH);
 
-		cout << ">> " << output << endl;
+		cout << ">> " << output;
 
 		delete[] charArray;
+		memset(output, 0, sizeof(output));
 	}
 	return 0;
 }
